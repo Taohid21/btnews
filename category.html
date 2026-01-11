@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>খবর | বাউফল টুডে</title>
+    
+    <!-- ফন্ট এবং আইকন -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #111;
+            --accent-color: #D91C22;
+            --text-gray: #444;
+            --light-gray: #f2f2f2;
+            --border-color: #e0e0e0;
+            --container-width: 1200px;
+            --font-main: 'Hind Siliguri', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+
+        body {
+            font-family: var(--font-main);
+            background: #fff;
+            color: var(--primary-color);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        a:hover { color: var(--accent-color); }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* --- হেডার স্টাইল (Index এর সাথে মিল রেখে) --- */
+        .main-header { padding: 15px 0; border-bottom: 1px solid var(--border-color); }
+        .header-wrapper { display: flex; justify-content: space-between; align-items: center; }
+        .logo h1 { font-size: 36px; font-weight: 700; color: #000; line-height: 1; }
+        .logo span { color: var(--accent-color); }
+        
+        .navbar { background: #fff; border-bottom: 3px solid var(--border-color); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .nav-menu { display: flex; gap: 25px; }
+        .nav-menu li a { display: block; padding: 12px 0; font-weight: 600; font-size: 16px; }
+
+        /* --- ব্রেডক্রাম্ব --- */
+        .breadcrumb {
+            padding: 15px 0;
+            color: #666;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 30px;
+        }
+        .breadcrumb a { color: #888; }
+        .breadcrumb span { color: var(--accent-color); font-weight: 600; margin-left: 5px; }
+
+        /* --- মেইন লেআউট (বাম পাশে নিউজ, ডান পাশে সাইডবার) --- */
+        .page-grid {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr; /* নিউজ সেকশন বড়, সাইডবার ছোট */
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        /* ক্যাটাগরি হেডার */
+        .category-header {
+            margin-bottom: 25px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .category-name { font-size: 28px; font-weight: 700; color: var(--accent-color); }
+        .category-badge { 
+            background: var(--accent-color); color: #fff; 
+            padding: 2px 10px; font-size: 12px; border-radius: 3px; 
+            margin-left: 15px; vertical-align: middle;
+        }
+
+        /* নিউজ লিস্ট স্টাইল (হরাইজন্টাল কার্ড) */
+        .news-list-item {
+            display: flex;
+            gap: 20px;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            align-items: flex-start;
+        }
+        .news-list-item:last-child { border-bottom: none; }
+
+        .news-thumb {
+            width: 260px; /* ফিক্সড উইডথ */
+            height: 160px;
+            flex-shrink: 0;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #eee;
+        }
+        .news-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .news-list-item:hover .news-thumb img { transform: scale(1.05); }
+
+        .news-content { flex: 1; }
+        .news-title {
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.35;
+            margin-bottom: 10px;
+            color: #111;
+        }
+        .news-excerpt {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* ২ লাইনের বেশি হলে ডট ডট */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .meta-info { font-size: 13px; color: #888; display: flex; gap: 15px; }
+        .meta-info i { margin-right: 5px; }
+
+        /* সাইডবার */
+        .sidebar-widget {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+        }
+        .widget-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+        .side-link { display: block; padding: 8px 0; border-bottom: 1px solid #e0e0e0; font-size: 15px; font-weight: 500; }
+        .side-link:last-child { border-bottom: none; }
+
+        /* ফুটার */
+        footer { background: #111; color: #ccc; padding: 40px 0; margin-top: 50px; text-align: center; }
+
+        /* রেসপনসিভ */
+        @media (max-width: 768px) {
+            .page-grid { grid-template-columns: 1fr; }
+            .news-list-item { flex-direction: column; }
+            .news-thumb { width: 100%; height: 200px; }
+            .nav-menu { display: none; } /* মোবাইলে মেনু হাইড (সিম্পলিসিটির জন্য) */
+            .logo h1 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- হেডার -->
+    <header class="main-header">
+        <div class="container header-wrapper">
+            <div class="logo">
+                <a href="index.html"><h1>বাউফল <span>টুডে</span></h1></a>
+            </div>
+            <a href="index.html" style="font-size: 14px; font-weight: 600; color: #666;"><i class="fas fa-home"></i> হোম</a>
+        </div>
+    </header>
+
+    <!-- নেভিগেশন -->
+    <nav class="navbar">
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="index.html">প্রচ্ছদ</a></li>
+                <li><a href="category.html?c=জাতীয়">জাতীয়</a></li>
+                <li><a href="category.html?c=রাজনীতি">রাজনীতি</a></li>
+                <li><a href="category.html?c=বাউফল">বাউফল বার্তা</a></li>
+                <li><a href="category.html?c=খেলাধুলা">খেলাধুলা</a></li>
+                <li><a href="category.html?c=বিনোদন">বিনোদন</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- ব্রেডক্রাম্ব -->
+        <div class="breadcrumb">
+            <a href="index.html">প্রচ্ছদ</a> <i class="fas fa-angle-right" style="font-size:12px; margin:0 5px;"></i> <span id="bread-cat">ক্যাটাগরি</span>
+        </div>
+
+        <div class="page-grid">
+            <!-- বাম পাশ: নিউজ লিস্ট -->
+            <div class="main-content">
+                <div class="category-header">
+                    <h1 class="category-name" id="cat-title">লোডিং...</h1>
+                </div>
+
+                <div id="news-container">
+                    <!-- এখানে নিউজ লোড হবে -->
+                    <p style="color:#666;">খবর খোঁজা হচ্ছে...</p>
+                </div>
+            </div>
+
+            <!-- ডান পাশ: সাইডবার -->
+            <aside class="sidebar">
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">জনপ্রিয় বিভাগ</h3>
+                    <a href="category.html?c=বাউফল" class="side-link">বাউফল বার্তা</a>
+                    <a href="category.html?c=রাজনীতি" class="side-link">রাজনীতি</a>
+                    <a href="category.html?c=ক্রাইম" class="side-link">ক্রাইম</a>
+                    <a href="category.html?c=শিক্ষা" class="side-link">শিক্ষা</a>
+                </div>
+
+                <div class="sidebar-widget" style="background: #e3f2fd; border-color: #bbdefb;">
+                    <h3 class="widget-title" style="border-color: #90caf9;">বিজ্ঞাপন</h3>
+                    <div style="height: 200px; background: rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; color: #888;">
+                        বিজ্ঞাপন স্থান
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; ২০২৬ বাউফল টুডে | সত্যের সন্ধানে সর্বদা</p>
+        </div>
+    </footer>
+
+    <!-- স্ক্রিপ্ট -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_HBGuQSh_GzqrHqHbgdaoBikLZsK3Qqs",
+            authDomain: "new-all-f99f7.firebaseapp.com",
+            databaseURL: "https://new-all-f99f7-default-rtdb.firebaseio.com",
+            projectId: "new-all-f99f7",
+            storageBucket: "new-all-f99f7.firebasestorage.app",
+            messagingSenderId: "1069748173900",
+            appId: "1:1069748173900:web:158d6336c0f4628133c8e9"
+        };
+
+        const db = getFirestore(initializeApp(firebaseConfig));
+
+        // URL থেকে প্যারামিটার নেওয়া
+        const params = new URLSearchParams(window.location.search);
+        let category = params.get('c');
+
+        // ডিসপ্লে নাম ঠিক করা (ডাটাবেজ vs ডিসপ্লে)
+        let displayName = category;
+        if(category === "বাউফল") displayName = "বাউফল বার্তা";
+
+        // টাইটেল সেট করা
+        if(category) {
+            document.getElementById('cat-title').innerText = displayName;
+            document.getElementById('bread-cat').innerText = displayName;
+            document.title = `${displayName} | বাউফল টুডে`;
+            loadCategoryNews(category);
+        } else {
+            document.getElementById('news-container').innerHTML = '<h3 style="color:red; text-align:center;">কোন ক্যাটাগরি নির্বাচন করা হয়নি।</h3>';
+            document.getElementById('cat-title').innerText = "ত্রুটি";
+        }
+
+        async function loadCategoryNews(cat) {
+            try {
+                // ডাটাবেজ কোয়েরি (Timestamp অনুযায়ী সর্ট করা)
+                // দ্রষ্টব্য: Firebase এ ইনডেক্স এরর আসলে 'orderBy' সাময়িক বাদ দিতে পারেন
+                const q = query(collection(db, "news"), where("category", "==", cat));
+                
+                const snap = await getDocs(q);
+                let html = '';
+                
+                if (snap.empty) {
+                    document.getElementById('news-container').innerHTML = `
+                        <div style="text-align:center; padding: 40px; background:#f9f9f9; border-radius:5px;">
+                            <i class="far fa-newspaper" style="font-size:40px; color:#ccc; margin-bottom:10px;"></i>
+                            <p>এই বিভাগে আপাতত কোন খবর নেই।</p>
+                        </div>`;
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    
+                    // ডেট ফরম্যাট করা
+                    let dateStr = "সম্প্রতি";
+                    if(data.timestamp) {
+                        dateStr = new Date(data.timestamp.toDate()).toLocaleDateString('bn-BD', {day: 'numeric', month: 'long', year: 'numeric'});
+                    }
+
+                    // ডিটেইলস ছোট করা (Excerpt)
+                    let excerpt = data.details ? data.details.replace(/<[^>]*>?/gm, '').substring(0, 120) + '...' : '';
+
+                    html += `
+                        <div class="news-list-item">
+                            <a href="details.html?id=${doc.id}" class="news-thumb">
+                                <img src="${data.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${data.title}">
+                            </a>
+                            <div class="news-content">
+                                <a href="details.html?id=${doc.id}">
+                                    <h2 class="news-title">${data.title}</h2>
+                                </a>
+                                <p class="news-excerpt">${excerpt}</p>
+                                <div class="meta-info">
+                                    <span><i class="far fa-calendar-alt"></i> ${dateStr}</span>
+                                    <span><i class="fas fa-tag"></i> ${displayName}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                document.getElementById('news-container').innerHTML = html;
+
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById('news-container').innerHTML = '<p style="color:red;">খবর লোড করতে সমস্যা হয়েছে।</p>';
+            }
+        }
+    </script>
+</body>
+</html>

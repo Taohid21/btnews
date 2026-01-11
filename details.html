@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ডাইনামিক এসইও প্লেসহোল্ডার (JS দিয়ে পূরণ হবে) -->
+    <title>খবর বিস্তারিত | বাউফল টুডে</title>
+    <meta name="description" content="সর্বশেষ খবরের বিস্তারিত পড়ুন বাউফল টুডে-তে।">
+    
+    <!-- Facebook / WhatsApp Preview Tags -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="বাউফল টুডে">
+    <meta property="og:description" content="সত্যের সন্ধানে সর্বদা...">
+    <meta property="og:image" content="https://via.placeholder.com/600x315?text=News">
+    <meta property="og:url" content="">
+
+    <!-- ফন্ট এবং স্টাইল -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #111;
+            --accent: #D91C22; /* গাঢ় লাল */
+            --bg-light: #fdfdfd;
+            --border: #e5e5e5;
+            --container: 1150px;
+            --font-body: 'Hind Siliguri', sans-serif;
+            --font-head: 'Tiro Bangla', serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background: var(--bg-light); color: var(--primary); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        img { max-width: 100%; height: auto; display: block; border-radius: 4px; }
+        
+        .container { max-width: var(--container); margin: 0 auto; padding: 0 15px; }
+
+        /* --- হেডার --- */
+        .site-header { background: #fff; border-bottom: 1px solid var(--border); padding: 15px 0; position: sticky; top: 0; z-index: 999; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; }
+        .logo h1 { font-family: var(--font-head); font-size: 28px; font-weight: 700; line-height: 1; }
+        .logo span { color: var(--accent); }
+        .back-home { font-weight: 600; font-size: 15px; color: #555; display: flex; align-items: center; gap: 6px; }
+        .back-home:hover { color: var(--accent); }
+
+        /* --- লেআউট --- */
+        .main-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 40px; margin: 30px 0 50px; }
+
+        /* --- নিউজ কন্টেন্ট স্টাইল --- */
+        .breadcrumb { font-size: 14px; color: #777; margin-bottom: 15px; }
+        .breadcrumb span { color: var(--accent); font-weight: 600; }
+
+        .news-headline { font-family: var(--font-head); font-size: 34px; line-height: 1.35; color: #000; margin-bottom: 20px; }
+        
+        .reporter-card { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 25px; }
+        .reporter-icon { width: 40px; height: 40px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .reporter-info h4 { font-size: 15px; font-weight: 600; margin: 0; }
+        .reporter-info span { font-size: 13px; color: #666; }
+
+        .featured-img-wrap { margin-bottom: 25px; position: relative; }
+        .img-caption { font-size: 13px; color: #666; background: #eee; padding: 5px 10px; border-left: 3px solid var(--accent); margin-top: 5px; }
+
+        .news-body { font-size: 19px; line-height: 1.8; color: #222; text-align: left; }
+        .news-body p { margin-bottom: 20px; }
+
+        /* --- শেয়ার সেকশন (আপডেট করা হয়েছে) --- */
+        .share-box { background: #f0f2f5; padding: 20px; border-radius: 8px; margin-top: 40px; text-align: center; border: 1px solid #ddd; }
+        .share-title { font-weight: 700; font-size: 18px; margin-bottom: 15px; display: block; color: #333; }
+        .share-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        
+        .s-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 30px; color: #fff; font-size: 14px; font-weight: 600; transition: transform 0.2s; }
+        .s-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .s-fb { background: #1877F2; }
+        .s-wa { background: #25D366; }
+        .s-copy { background: #555; }
+        .s-native { background: var(--accent); display: none; } /* মোবাইলে শো করবে */
+
+        /* --- সাইডবার ও বিজ্ঞাপন --- */
+        .sidebar-title { font-size: 18px; font-weight: 700; border-bottom: 2px solid var(--accent); padding-bottom: 8px; margin-bottom: 20px; }
+
+        /* Ti E-Development বিজ্ঞাপন কার্ড (নতুন ডিজাইন) */
+        .ad-card-ti {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* আধুনিক ডার্ক গ্রেডিয়েন্ট */
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .ad-card-ti::before { content: ''; position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+        .ad-badge { position: absolute; top: 15px; left: 15px; background: #FFD700; color: #000; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 3px; text-transform: uppercase; }
+        
+        .ti-icon { font-size: 40px; margin-bottom: 15px; color: #4facfe; }
+        .ti-head { font-size: 22px; font-weight: 700; margin-bottom: 10px; line-height: 1.3; }
+        .ti-text { font-size: 14px; color: #ddd; margin-bottom: 20px; line-height: 1.5; }
+        .ti-cta { display: inline-block; background: #fff; color: #2c5364; padding: 10px 25px; border-radius: 50px; font-weight: 700; font-size: 14px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .ti-cta:hover { background: #4facfe; color: #fff; }
+
+        /* আরো খবর লিস্ট */
+        .side-news { display: flex; gap: 12px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .side-news img { width: 90px; height: 65px; object-fit: cover; border-radius: 4px; background: #ddd; }
+        .side-news h4 { font-size: 15px; font-weight: 600; line-height: 1.4; color: #333; }
+        .side-news:hover h4 { color: var(--accent); }
+
+        /* ফুটার */
+        footer { background: #111; color: #aaa; padding: 30px 0; text-align: center; margin-top: 50px; font-size: 14px; }
+
+        /* রেসপনসিভ */
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .news-headline { font-size: 26px; }
+            .share-buttons { flex-direction: column; }
+            .s-btn { width: 100%; justify-content: center; }
+            .s-native { display: flex !important; } /* মোবাইলে নেটিভ বাটন দেখাবে */
+            .s-fb, .s-wa { display: none; } /* মোবাইলে ফেসবুক বাটন লুকিয়ে নেটিভ বাটন দেখানো ভালো */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- হেডার -->
+    <header class="site-header">
+        <div class="container header-flex">
+            <div class="logo">
+                <a href="index.html"><h1>বাউফল <span>টুডে</span></h1></a>
+            </div>
+            <a href="index.html" class="back-home"><i class="fas fa-home"></i> হোমপেজ</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- লোডার -->
+        <div id="loading" style="text-align: center; padding: 80px 0;">
+            <i class="fas fa-circle-notch fa-spin" style="font-size: 40px; color: var(--accent);"></i>
+            <p style="margin-top: 15px; color: #666;">খবর লোড হচ্ছে...</p>
+        </div>
+
+        <!-- মেইন কন্টেন্ট -->
+        <div class="main-layout" id="news-content" style="display: none;">
+            
+            <!-- বাম পাশ: নিউজ -->
+            <article>
+                <div class="breadcrumb">
+                    <a href="index.html">প্রচ্ছদ</a> / <span id="n-category">ক্যাটাগরি</span>
+                </div>
+
+                <h1 class="news-headline" id="n-title"></h1>
+
+                <div class="reporter-card">
+                    <div class="reporter-icon"><i class="fas fa-pen-fancy"></i></div>
+                    <div class="reporter-info">
+                        <h4>বাউফল টুডে ডেস্ক</h4>
+                        <span id="n-date">প্রকাশিত: লোড হচ্ছে...</span>
+                    </div>
+                </div>
+
+                <div class="featured-img-wrap">
+                    <img id="n-img" src="" alt="News Image">
+                    <div class="img-caption">ছবি: সংগৃহীত / প্রতীকী</div>
+                </div>
+
+                <div class="news-body" id="n-details">
+                    <!-- বিস্তারিত খবর -->
+                </div>
+
+                <!-- স্মার্ট শেয়ার সেকশন -->
+                <div class="share-box">
+                    <span class="share-title">খবরটি শেয়ার করুন</span>
+                    <div class="share-buttons">
+                        <!-- মোবাইল শেয়ার (Smart Native) -->
+                        <button class="s-btn s-native" id="btn-native-share">
+                            <i class="fas fa-share-alt"></i> বন্ধুদের সাথে শেয়ার করুন
+                        </button>
+                        
+                        <!-- ডেস্কটপ শেয়ার -->
+                        <a href="#" class="s-btn s-fb" id="btn-fb-share" target="_blank">
+                            <i class="fab fa-facebook-f"></i> ফেসবুকে শেয়ার
+                        </a>
+                        <a href="#" class="s-btn s-wa" id="btn-wa-share" target="_blank">
+                            <i class="fab fa-whatsapp"></i> হোয়াটসঅ্যাপে পাঠান
+                        </a>
+                        <a href="#" class="s-btn s-copy" id="btn-copy-link">
+                            <i class="fas fa-link"></i> লিংক কপি করুন
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- ডান পাশ: সাইডবার -->
+            <aside>
+                
+                <!-- Ti E-Development বিজ্ঞাপন -->
+                <div class="ad-card-ti">
+                    <span class="ad-badge">SPONSORED</span>
+                    <i class="fas fa-laptop-code ti-icon"></i>
+                    <h3 class="ti-head">Ti E-Development Team</h3>
+                    <p class="ti-text">আপনার ব্যাবসা কিংবা প্রতিষ্ঠানের জন্য আধুনিক ওয়েবসাইট বা সফটওয়্যার তৈরি করতে আজই যোগাযোগ করুন। সেরা মানের সেবা, সাশ্রয়ী মূল্যে।</p>
+                    <a href="https://www.facebook.com/" target="_blank" class="ti-cta">বিস্তারিত জানুন <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <h3 class="sidebar-title">সর্বশেষ খবর</h3>
+                <div id="related-news-list">
+                    <!-- জাভাস্ক্রিপ্ট দিয়ে লোড হবে -->
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; ২০২৬ বাউফল টুডে | কারিগরি সহযোগিতায়: <strong>Ti E-Development Team</strong></p>
+        </div>
+    </footer>
+
+    <!-- স্ক্রিপ্ট -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_HBGuQSh_GzqrHqHbgdaoBikLZsK3Qqs",
+            authDomain: "new-all-f99f7.firebaseapp.com",
+            databaseURL: "https://new-all-f99f7-default-rtdb.firebaseio.com",
+            projectId: "new-all-f99f7",
+            storageBucket: "new-all-f99f7.firebasestorage.app",
+            messagingSenderId: "1069748173900",
+            appId: "1:1069748173900:web:158d6336c0f4628133c8e9"
+        };
+
+        const db = getFirestore(initializeApp(firebaseConfig));
+
+        // URL প্যারামিটার থেকে আইডি নেওয়া
+        const params = new URLSearchParams(window.location.search);
+        const newsId = params.get('id');
+        const currentUrl = window.location.href; // বর্তমান লিংক (যেখানে ইউজার আছে)
+
+        async function initPage() {
+            if(!newsId) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                // ১. মূল খবর লোড করা
+                const docRef = doc(db, "news", newsId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    // --- DOM আপডেট ---
+                    document.getElementById('n-title').innerText = data.title;
+                    document.getElementById('n-category').innerText = data.category || 'সংবাদ';
+                    
+                    // ইমেজ হ্যান্ডলিং
+                    const imageUrl = data.imageUrl || 'https://via.placeholder.com/800x450';
+                    document.getElementById('n-img').src = imageUrl;
+
+                    // তারিখ ফরম্যাট (বাংলায়)
+                    let dateStr = "অজানা";
+                    if(data.timestamp) {
+                        const date = new Date(data.timestamp.toDate());
+                        dateStr = date.toLocaleDateString('bn-BD', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                    }
+                    document.getElementById('n-date').innerText = "প্রকাশিত: " + dateStr;
+
+                    // বিস্তারিত টেক্সট ফরম্যাটিং
+                    const text = data.details || data.description || "";
+                    document.getElementById('n-details').innerHTML = text.replace(/\n/g, '<br><br>');
+
+                    // --- SEO & মেটা ট্যাগ আপডেট (ডাইনামিক) ---
+                    document.title = data.title;
+                    updateMetaTags(data.title, text, imageUrl, currentUrl);
+
+                    // --- শেয়ার বাটন সেটআপ ---
+                    setupShareButtons(data.title, currentUrl);
+
+                    // লোডিং বন্ধ
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('news-content').style.display = 'grid';
+
+                } else {
+                    document.getElementById('loading').innerHTML = "<h3>খবরটি পাওয়া যায়নি!</h3>";
+                }
+
+                // ২. সাইডবার লোড (এই খবরটি বাদ দিয়ে)
+                loadSidebar(newsId);
+
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+
+        function loadSidebar(excludeId) {
+            const q = query(collection(db, "news"), orderBy("timestamp", "desc"), limit(6));
+            getDocs(q).then(snap => {
+                let html = '';
+                snap.forEach(d => {
+                    if(d.id !== excludeId) {
+                        html += `
+                            <a href="details.html?id=${d.id}" class="side-news">
+                                <img src="${d.data().imageUrl || 'https://via.placeholder.com/100'}" alt="Thumb">
+                                <h4>${d.data().title}</h4>
+                            </a>`;
+                    }
+                });
+                document.getElementById('related-news-list').innerHTML = html;
+            });
+        }
+
+        function updateMetaTags(title, desc, img, url) {
+            // ক্লিন টেক্সট (HTML ট্যাগ ছাড়া)
+            const plainDesc = desc.replace(/<[^>]*>?/gm, '').substring(0, 150) + "...";
+
+            // Open Graph (FB/WhatsApp)
+            document.querySelector('meta[property="og:title"]').setAttribute("content", title);
+            document.querySelector('meta[property="og:description"]').setAttribute("content", plainDesc);
+            document.querySelector('meta[property="og:image"]').setAttribute("content", img);
+            document.querySelector('meta[property="og:url"]').setAttribute("content", url);
+            document.querySelector('meta[name="description"]').setAttribute("content", plainDesc);
+        }
+
+        function setupShareButtons(title, url) {
+            // ফেসবুক
+            document.getElementById('btn-fb-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+            
+            // হোয়াটসঅ্যাপ (টাইটেল + লিংক)
+            document.getElementById('btn-wa-share').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(title)}%0A${encodeURIComponent(url)}`;
+            
+            // কপি লিংক
+            document.getElementById('btn-copy-link').onclick = (e) => {
+                e.preventDefault();
+                navigator.clipboard.writeText(url).then(() => alert("লিংক কপি হয়েছে!"));
+            };
+
+            // নেটিভ শেয়ার (মোবাইলের জন্য স্পেশাল)
+            if (navigator.share) {
+                const nativeBtn = document.getElementById('btn-native-share');
+                // সিএসএস দিয়ে মোবাইলে ডিসপ্লে ফ্লেক্স করা আছে
+                nativeBtn.onclick = () => {
+                    navigator.share({
+                        title: title,
+                        text: `পড়ুন: ${title}`,
+                        url: url
+                    }).catch(console.error);
+                };
+            }
+        }
+
+        initPage();
+    </script>
+</body>
+</html>
